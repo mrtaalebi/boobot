@@ -1,13 +1,24 @@
 import os
+import logging
+
 
 from telegram.ext import Updater, CommandHandler
 
 
 class Boobot:
 
-    def __init__(self, bot_token):
+    def __init__(self, bot_token, log_level='INFO'):
         self.updater = Updater(bot_token, use_context=True)
         self.dispatcher = self.updater.dispatcher
+
+        logging.basicConfig(
+            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+            level={
+                'INFO': logging.INFO,
+                'DEBUG': logging.DEBUG,
+                'ERROR': logging.ERROR,
+                }[log_level]
+        )
 
 
     def start(self, update, context):
