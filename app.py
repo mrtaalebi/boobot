@@ -3,6 +3,7 @@ import logging
 
 
 from telegram.ext import Updater, CommandHandler
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 
 class Boobot:
