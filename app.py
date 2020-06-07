@@ -30,8 +30,8 @@ class Boobot:
         ]
         
         reply_markup = InlineKeyboardMarkup(keyboard)
-        context.bot.send_message(
-            chat_id=update.message.chat_id,
+        context.message.reply_text(
+            'hello',
             reply_markup=reply_markup,
         )
 
