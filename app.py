@@ -25,7 +25,7 @@ class Boobot:
 
 
     def add_handlers(self):
-        start_handler = CommandHandler('start', start)
+        start_handler = CommandHandler('start', self.start)
         self.dispatcher.add_handler(start_handler)
 
 
