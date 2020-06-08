@@ -66,7 +66,7 @@ class Boobot:
                     f'following user wants to join {user.id} @{user.username}\n'
                 )
                 reply_keyboard = ReplyKeyboardMarkup(keyboard)
-                context.bot.send_message(self.admin_id, admin_msg, reply_markup=reply_keybaord)
+                context.bot.send_message(self.admin_id, admin_msg, reply_markup=reply_keyboard)
                 msg = (
                     'admin has been informed about your request.\n'
                     'they may contact you soon!\n'
