@@ -13,7 +13,7 @@ from src.db import DB, User
 
 class Boobot:
 
-    def __init__(self, bot_token, admin_id, engine_uri, oc_host, mtproto_proxy, log_level='INFO'):
+    def __init__(self, bot_token, admin_id, engine_uri, oc_host, mtproto_proxy, base_dir, log_level='INFO'):
         self.updater = Updater(bot_token, use_context=True)
         self.dispatcher = self.updater.dispatcher
         self.input_dispatcher = \
@@ -26,6 +26,7 @@ class Boobot:
         self.admin_id = admin_id
         self.oc_host = oc_host
         self.mtproto_proxy = mtproto_proxy
+        self.base_dir = base_dir
 
         logging.basicConfig(
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -229,7 +230,7 @@ class Boobot:
             
             subprocess.run(
                 [
-                    '/etc/ocserv/add_user.sh',
+                    self.base_dir + 'src/add_user.sh',
                     f'{user.oc_username}',
                     f'{user.oc_password}',
                 ]
