@@ -6,7 +6,7 @@ import json
 from telegram.ext import Updater, CommandHandler, RegexHandler, ConversationHandler
 from telegram import InlineKeyboardButton, ReplyKeyboardMarkup
 
-from src.db import DB
+from src.db import DB, User
 
 
 class Boobot:

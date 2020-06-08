@@ -45,7 +45,7 @@ class DB:
     def query(self, class_, filter_):
         s = self.session()
         q = s.query(class_)
-        q = q.filter(f)
+        q = q.filter(filter_)
         return q
 
     
