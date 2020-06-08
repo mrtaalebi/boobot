@@ -90,7 +90,7 @@ class Boobot:
 
 
     def openconnect_add_data(self, update, context):
-        user = self.db.get_or_create_user(update.message.from_user.id)
+        user = self.db.get_or_create_user(update.message.from_user)
         keyboard = [
             InlineKeyboardButton('openconnect'),
             InlineKeyboardButton('main menu'),
@@ -101,7 +101,7 @@ class Boobot:
 
 
     def openconnect_add_data_username(self, update, context):
-        user = self.db.get_or_create_user(update.message.from_user.id)
+        user = self.db.get_or_create_user(update.message.from_user)
         text = update.message.text
         keyboard = [
             InlineKeyboardButton('openconnect'),
@@ -126,7 +126,7 @@ class Boobot:
 
 
     def openconnect_add_data_password(self, update, context):
-        user = self.db.get_or_create_user(update.message.from_user.id)
+        user = self.db.get_or_create_user(update.message.from_user)
         text = update.message.text
         keyboard = [
             InlineKeyboardButton('openconnect'),
