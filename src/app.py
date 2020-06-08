@@ -70,7 +70,7 @@ class Boobot:
 
 
     def openconnect_show_data(self, update, context):
-        oc_config = self.db.get_oc_config(update.message.from_user.id)
+        oc_config = self.db.get_user(update.message.from_user.id)
         if oc_config == None:
             keyboard = [
                 InlineKeyboardButton('add openconnect account'),
