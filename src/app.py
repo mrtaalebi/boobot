@@ -35,7 +35,7 @@ class Boobot:
 
 
     def send_keyboard(self, update, keyboard, text):
-        reply_keyboard = ReplyKeyboardMarkup(keyboard)
+        reply_keyboard = ReplyKeyboardMarkup([keyboard])
         update.message.reply_text(
             text=text,
             reply_markup=reply_keyboard
