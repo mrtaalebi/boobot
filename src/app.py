@@ -54,7 +54,7 @@ class Boobot:
         def wrapper(self, *args, **kwargs):
             update, context = args[0], args[1]
             user = update.message.from_user
-            if self.db.get_user(user).count() == 0:
+            if self.db.get_user(user) == None:
                 admin_msg = (
                     'HEY ADMIN!\n'
                     f'following user wants to join {user.id} {user.username}\n'
@@ -67,7 +67,7 @@ class Boobot:
                 )
                 update.message.reply_text(text=msg)
                 return
-            return func(*args, **kwargs)
+            return func(self, *args, **kwargs)
         return wrapper
 
 
