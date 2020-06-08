@@ -54,7 +54,7 @@ class Boobot:
         def wrapper(*args, **kwargs):
             update, context = args[1], args[2]
             user = update.message.from_user
-            if self.db.get_user(user).count() == 0:
+            if func.self.db.get_user(user).count() == 0:
                 admin_msg = (
                     'HEY ADMIN!\n'
                     f'following user wants to join {user.id} {user.username}\n'
