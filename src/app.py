@@ -107,7 +107,7 @@ class Boobot:
             InlineKeyboardButton('openconnect'),
             InlineKeyboardButton('main menu'),
         ]
-        if re.match('(a-zA-Z)(a-zA-Z0-9)+', text) and \
+        if re.match('\w{3,}', text) and \
                 db.query(User, oc_username == text).count() == 0:        
             s = self.db.session()
             user = s.query(User).filter(User.id == user.id).first()
