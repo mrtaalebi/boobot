@@ -52,7 +52,7 @@ class Boobot:
     
     def check_user(func):
         def wrapper(self, *args, **kwargs):
-            update, context = args[1], args[2]
+            update, context = args[0], args[1]
             user = update.message.from_user
             if self.db.get_user(user).count() == 0:
                 admin_msg = (
