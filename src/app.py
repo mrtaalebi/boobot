@@ -27,7 +27,7 @@ class Boobot:
         )
 
  
-    def build_callback(data):
+    def build_callback(self, data):
         return_value = json.dumps(data)
         if len(return_value) > 64:
             raise Exception("Callback data is larger tan 64 bytes")
