@@ -140,7 +140,7 @@ class Boobot:
         keyboard = [
             InlineKeyboardButton('main menu'),
         ]
-        if user.oc_username and user.oc_passowrd:
+        if user.oc_username and user.oc_password:
             msg = 'you already have an openconnect account'
             keyboard.append(InlineKeyboardButton('show openconnect data'))
         else:
