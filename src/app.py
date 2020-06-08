@@ -152,7 +152,7 @@ class Boobot:
     def openconnect_show_data(self, update, context):
         user = self.db.get_user(update.message.from_user)
 
-        if user.oc_username == None or user.oc_password == None:
+        if not user.oc_username or not user.oc_password:
             keyboard = [
                 [InlineKeyboardButton('add openconnect data'),
                 InlineKeyboardButton('main menu')]
