@@ -52,7 +52,7 @@ class DB:
     
     def create_user(self, from_):
         user_id = from_['id']
-        lang = from_['language_code'] if 'language_code' in from_ else 'en'
+        lang = 'en'
         user = User(
                 id=user_id,
                 name=from_['first_name'],
