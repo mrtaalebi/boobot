@@ -1,7 +1,7 @@
 import os
 import logging
 import json
-
+import re
 
 from telegram.ext import Updater, CommandHandler, MessageHandler
 from telegram.ext.filters import Filters
@@ -107,7 +107,7 @@ class Boobot:
             InlineKeyboardButton('openconnect'),
             InlineKeyboardButton('main menu'),
         ]
-        if re.match(text, '(a-zA-Z)(a-zA-Z0-9)+') and \
+        if re.match('(a-zA-Z)(a-zA-Z0-9)+', text) and \
                 db.query(User, oc_username == text).count() == 0:        
             s = self.db.session()
             user = s.query(User).filter(User.id == user.id).first()
@@ -132,7 +132,7 @@ class Boobot:
             InlineKeyboardButton('openconnect'),
             InlineKeyboardButton('main menu'),
         ]
-        if len(text) >= 8:
+        if 8 <= len(text) <= 128:
             s = self.db.session()
             user = s.query(User).filter(User.id == user.id).first()
             user.oc_password = text
@@ -152,7 +152,7 @@ class Boobot:
             self.send_keyboard(update, keyboard, msg)
             self.input_dispatcher[user.id] = None
         else:
-            msg = 'password must be >=8 characters'
+            msg = 'password must be between 8 and 128 characters'
             self.send_keyboard(update, keyboard, msg)
 
 
