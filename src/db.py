@@ -39,7 +39,7 @@ class DB:
                 x = func(*args, **kwargs)
                 return x
             except Exception as e:
-                logging.exception(str(e))
+                logging.info('DB TRANSACTION ERROR')
         return wrapper
 
     
