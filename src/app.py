@@ -119,7 +119,7 @@ class Boobot:
     def openconnect(self, update, context):
         keyboard = [
             [InlineKeyboardButton('show openconnect data'),
-            InlineKeyboardButton('add openconnect data')]
+            InlineKeyboardButton('add openconnect data')],
             [InlineKeyboardButton('main menu')]
         ]
         self.send_keyboard(update, keyboard, 'openconnect')
