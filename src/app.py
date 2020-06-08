@@ -43,7 +43,7 @@ class Boobot:
 
 
     def send_keyboard(self, update, keyboard, text):
-        reply_keyboard = ReplyKeyboardMarkup([keyboard])
+        reply_keyboard = ReplyKeyboardMarkup(keyboard)
         update.message.reply_text(
             text=text,
             reply_markup=reply_keyboard
@@ -91,7 +91,7 @@ class Boobot:
     def start(self, update, context):
         user = self.db.get_user(update.message.from_user)
         keyboard = [
-            InlineKeyboardButton(option['text'])
+            [InlineKeyboardButton(option['text'])]
             for option in
                 [
                     {
@@ -108,7 +108,7 @@ class Boobot:
     @check_user
     def mtproto(self, update, context):
         keyboard = [
-            InlineKeyboardButton('main menu')
+            [InlineKeyboardButton('main menu'),]
         ]
         msg = self.mtproto
         self.send_keyboard(update, keyboard, msg)
@@ -117,8 +117,9 @@ class Boobot:
     @check_user
     def openconnect(self, update, context):
         keyboard = [
-            InlineKeyboardButton('show openconnect data'),
-            InlineKeyboardButton('add openconnect data')
+            [InlineKeyboardButton('show openconnect data'),
+            InlineKeyboardButton('add openconnect data'),]
+            [InlineKeyboardButton('main menu'),]
         ]
         self.send_keyboard(update, keyboard, 'openconnect')
 
@@ -129,13 +130,13 @@ class Boobot:
 
         if user == None:
             keyboard = [
-                InlineKeyboardButton('add openconnect data'),
-                InlineKeyboardButton('main menu'),
+                [InlineKeyboardButton('add openconnect data'),
+                InlineKeyboardButton('main menu'),]
             ]
             self.send_keyboard(update, keyboard, 'nothing here!')
         else:
             keyboard = [
-                InlineKeyboardButton('main menu'),
+                [InlineKeyboardButton('main menu'),]
             ]
             self.send_keyboard(update, keyboard,
                 (
@@ -150,11 +151,11 @@ class Boobot:
     def openconnect_add_data(self, update, context):
         user = self.db.get_user(update.message.from_user)
         keyboard = [
-            InlineKeyboardButton('main menu'),
+            [InlineKeyboardButton('main menu'),]
         ]
         if user.oc_username and user.oc_password:
             msg = 'you already have an openconnect account'
-            keyboard.append(InlineKeyboardButton('show openconnect data'))
+            keyboard.append([InlineKeyboardButton('show openconnect data')])
         else:
             msg = 'enter a username for openconnect:'
             self.input_dispatcher[user.id] = self.openconnect_add_data_username
@@ -166,8 +167,8 @@ class Boobot:
         user = self.db.get_user(update.message.from_user)
         text = update.message.text
         keyboard = [
-            InlineKeyboardButton('openconnect'),
-            InlineKeyboardButton('main menu'),
+            [InlineKeyboardButton('openconnect'),
+            InlineKeyboardButton('main menu'),]
         ]
         if re.match('\w{3,}', text):
             users = self.db.query(User, User.oc_username == text)
@@ -194,8 +195,8 @@ class Boobot:
         user = self.db.get_user(update.message.from_user)
         text = update.message.text
         keyboard = [
-            InlineKeyboardButton('openconnect'),
-            InlineKeyboardButton('main menu'),
+            [InlineKeyboardButton('openconnect'),
+            InlineKeyboardButton('main menu'),]
         ]
         if 8 <= len(text) <= 128:
             s = self.db.session()
@@ -229,7 +230,7 @@ class Boobot:
             return self.input_dispatcher[user_id](update, context)
         else:
             keyboard = [
-                InlineKeyboardButton('main menu'),
+                [InlineKeyboardButton('main menu'),]
             ]
             msg = 'can\'t understand what to do'
             self.send_keyboard(update, keyboard, msg)
