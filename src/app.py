@@ -13,7 +13,7 @@ from src.db import DB, User
 
 class Boobot:
 
-    def __init__(self, bot_token, admin_id, engine_uri, oc_host, mtproto, log_level='INFO'):
+    def __init__(self, bot_token, admin_id, engine_uri, oc_host, mtproto_proxy, log_level='INFO'):
         self.updater = Updater(bot_token, use_context=True)
         self.dispatcher = self.updater.dispatcher
         self.input_dispatcher = \
@@ -110,7 +110,7 @@ class Boobot:
         keyboard = [
             [InlineKeyboardButton('main menu'),]
         ]
-        msg = self.mtproto
+        msg = self.mtproto_proxy
         self.send_keyboard(update, keyboard, msg)
 
     
