@@ -1,2 +1,5 @@
 #!/bin/bash
-ocpasswd -c /etc/ocserv/pass.wd $1 <<< "$2\n$2\n"
+echo $2 > boo.temp
+echo $2 >> boo.temp
+ocpasswd -c /etc/ocserv/pass.wd $1 < boo.temp
+rm boo.temp
