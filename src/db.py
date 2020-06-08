@@ -71,7 +71,7 @@ class DB:
 
 
     def get_user(self, user_id):
-        q = self.query(User, User.user_id == user_id)
+        q = self.query(User, User.id == user_id)
         if q.count() == 0:
             return None
         elif q.count() == 1:
