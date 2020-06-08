@@ -1,3 +1,5 @@
+import logging
+
 from sqlalchemy import Column, Integer, String, create_engine 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -30,19 +32,30 @@ class DB:
         self.engine = create_engine(uri)
         Base.metadata.create_all(self.engine)
 
+
+    def db_transact(func):
+        def wrapper(*args, **kwargs):
+            try:
+                return func(*args, **kwargs)
+            except Exception as e:
+                logging.exception(str(e))
+
     
+    @db_transact
     def session(self):
         s = sessionmaker()
         s.configure(bind=self.engine)
         return s()
 
     
+    @db_transact
     def add(self, entry):
         s = self.session()
         s.add(entry)
         s.commit()
 
     
+    @db_transact
     def query(self, class_, filter_):
         s = self.session()
         q = s.query(class_)
@@ -50,6 +63,7 @@ class DB:
         return q
 
     
+    @db_transact
     def create_user(self, from_):
         user_id = from_['id']
         lang = 'en'
@@ -63,7 +77,8 @@ class DB:
         self.add(user)
         return user
 
-
+    
+    @db_transact
     def get_user(self, from_):
         user_id = from_['id']
         q = self.query(User, User.id == user_id)
