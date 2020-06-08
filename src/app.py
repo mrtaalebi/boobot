@@ -50,7 +50,7 @@ class Boobot:
                 [
                     {
                         'text': 'openconnect',
-                        'data': build_callback(
+                        'data': self.build_callback(
                             {
                                 'd1': 'oc',
                                 'd2': 'm1'
