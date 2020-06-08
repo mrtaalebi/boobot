@@ -57,12 +57,16 @@ class Boobot:
             update, context = args[0], args[1]
             user = update.message.from_user
             if self.db.get_user(user) == None:
+                keyboard = [
+                    [InlineKeyboardButton(f'ADD @{user.username}')],
+                    [InlineKeyboardButton('main menu')]
+                ]
                 admin_msg = (
                     'HEY ADMIN!\n'
                     f'following user wants to join {user.id} @{user.username}\n'
-                    'add them with ADD_USER <user_id> command\n'
                 )
-                context.bot.send_message(self.admin_id, admin_msg)
+                reply_keyboard = ReplyKeyboardMarkup(keyboard)
+                context.bot.send_message(self.admin_id, admin_msg, reply_markup=reply_keybaord)
                 msg = (
                     'admin has been informed about your request.\n'
                     'they may contact you soon!\n'
@@ -85,7 +89,20 @@ class Boobot:
         user_id = text.split()[1]
         chat = context.bot.get_chat(user_id)
         self.db.create_user(chat)
+        keyboard = [
+            [InlineKeyboardButton(option['text'])]
+            for option in
+                [
+                    {
+                        'text': 'openconnect',
+                    },
+                    {
+                        'text': 'mtproto',
+                    },
+                ]    
+        ]
         msg = 'Horray! now you\'re registered!'
+        self.send_keyboard(update, keyboard, 'msg')
         context.bot.send_message(user_id, msg)
 
 
