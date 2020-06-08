@@ -186,7 +186,7 @@ class Boobot:
             MessageHandler(Filters.regex('add openconnect data'), self.openconnect_add_data)
         self.dispatcher.add_handler(openconnect_add_data_handler)
 
-        user_input_handler = MessageHandler(Filters.regex('.*'), user_input)
+        user_input_handler = MessageHandler(Filters.regex('.*'), self.user_input)
         self.dispatcher.add_handler(user_input_handler)
 
 
