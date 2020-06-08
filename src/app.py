@@ -58,7 +58,7 @@ class Boobot:
             user = update.message.from_user
             if self.db.get_user(user) == None:
                 keyboard = [
-                    [InlineKeyboardButton(f'ADD @{user.username}')],
+                    [InlineKeyboardButton(f'ADD @{user.id}')],
                     [InlineKeyboardButton('main menu')]
                 ]
                 admin_msg = (
@@ -259,7 +259,7 @@ class Boobot:
         start_handler = CommandHandler('start', self.start)
         self.dispatcher.add_handler(start_handler)
 
-        admin_add_user_handler = MessageHandler(Filters.regex('^ADD_USER \w+$'), self.admin_add_user)
+        admin_add_user_handler = MessageHandler(Filters.regex('^ADD \d+$'), self.admin_add_user)
         self.dispatcher.add_handler(admin_add_user_handler)
 
         mainmenu_handler = MessageHandler(Filters.regex('^main menu$'), self.start)
