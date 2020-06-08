@@ -28,7 +28,7 @@ class DB:
 
     def __init__(self, uri):
         self.engine = create_engine(uri)
-        Base.metadata.create_all(engine)
+        Base.metadata.create_all(self.engine)
 
     
     def session(self):
