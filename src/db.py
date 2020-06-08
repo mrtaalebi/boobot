@@ -36,7 +36,8 @@ class DB:
     def db_transact(func):
         def wrapper(*args, **kwargs):
             try:
-                return func(*args, **kwargs)
+                x = func(*args, **kwargs)
+                return x
             except Exception as e:
                 logging.exception(str(e))
         return wrapper
