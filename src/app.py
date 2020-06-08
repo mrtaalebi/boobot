@@ -234,7 +234,7 @@ class Boobot:
                     '/etc/ocserv/pass.wd',
                     user.oc_username,
                     '<<<',
-                    f'{user.oc_password}\n{user.oc_password}\n',
+                    f'\"{user.oc_password}\\n{user.oc_password}\\n\"',
                 ]
             )
 
