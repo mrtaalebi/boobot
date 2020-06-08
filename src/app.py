@@ -59,7 +59,7 @@ class Boobot:
             if self.db.get_user(user) == None:
                 admin_msg = (
                     'HEY ADMIN!\n'
-                    f'following user wants to join {user.id} {user.username}\n'
+                    f'following user wants to join {user.id} @{user.username}\n'
                     'add them with ADD_USER <user_id> command\n'
                 )
                 context.bot.send_message(self.admin_id, admin_msg)
@@ -75,7 +75,7 @@ class Boobot:
 
     def admin_add_user(self, update, context):
         user_id = update.message.from_user['id']
-        if user_id != self.admin_id:
+        if str(user_id) != str(self.admin_id):
             msg = \
                 'BITCH YOU THOUGHT YOU CAN SEND ADMIN COMMANDS?'
             update.message.reply_text(text=msg)
