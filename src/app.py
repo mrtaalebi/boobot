@@ -148,7 +148,7 @@ class Boobot:
                     '/etc/ocserv/pass.wd',
                     user.oc_username
                 ],
-                input=f'{user.oc_password}\n{user.oc_password}\n',
+                input=bytearray().extend(map(ord, f'{user.oc_password}\n{user.oc_password}\n')),
             )
 
             msg = 'nice! your openconnect account will be ready in a second.'
