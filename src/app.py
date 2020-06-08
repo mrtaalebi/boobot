@@ -13,7 +13,7 @@ from src.db import DB, User
 
 class Boobot:
 
-    def __init__(self, bot_token, admin_id, engine_uri, oc_host, log_level='INFO'):
+    def __init__(self, bot_token, admin_id, engine_uri, oc_host, mtproto, log_level='INFO'):
         self.updater = Updater(bot_token, use_context=True)
         self.dispatcher = self.updater.dispatcher
         self.input_dispatcher = \
@@ -97,9 +97,21 @@ class Boobot:
                     {
                         'text': 'openconnect',
                     },
+                    {
+                        'text': 'mtproto',
+                    },
                 ]    
         ]
         self.send_keyboard(update, keyboard, 'main menu')
+
+
+    @check_user
+    def mtproto(self, update, context):
+        keyboard = [
+            InlineKeyboardButton('main menu')
+        ]
+        msg = self.mtproto
+        self.send_keyboard(update, keyboard, msg)
 
     
     @check_user
@@ -235,6 +247,9 @@ class Boobot:
 
         openconnect_handler = MessageHandler(Filters.regex('^openconnect$'), self.openconnect)
         self.dispatcher.add_handler(openconnect_handler)
+
+        mtproto_handler = MessageHandler(Filters.regex('^mtproto$'), self.mtproto)
+        self.dispatcher.add_handler(mtproto_handler)
 
         openconnect_show_data_handler = \
             MessageHandler(Filters.regex('^show openconnect data$'), self.openconnect_show_data)
