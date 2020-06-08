@@ -70,7 +70,7 @@ class DB:
 
 
     def get_oc_config(self, user_id):
-        q = self.query(OC_Config, OC_Config.user_id = user_id)
+        q = self.query(OC_Config, OC_Config.user_id == user_id)
         if len(q) == 0:
             return None
         elif len(q) == 1:
