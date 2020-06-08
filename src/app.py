@@ -13,7 +13,8 @@ from src.db import DB, User
 
 class Boobot:
 
-    def __init__(self, bot_token, admin_id, engine_uri, oc_host, mtproto_proxy, base_dir, log_level='INFO'):
+    def __init__(self, bot_token, admin_id, engine_uri, oc_host,
+            mtproto_proxy, base_dir, log_level='INFO'):
         self.updater = Updater(bot_token, use_context=True)
         self.dispatcher = self.updater.dispatcher
         self.input_dispatcher = \
@@ -67,7 +68,8 @@ class Boobot:
                     f'following user wants to join {user.id} @{user.username}\n'
                 )
                 reply_keyboard = ReplyKeyboardMarkup(keyboard)
-                context.bot.send_message(self.admin_id, admin_msg, reply_markup=reply_keyboard)
+                context.bot.send_message(self.admin_id, admin_msg,
+                    reply_markup=reply_keyboard)
                 msg = (
                     'admin has been informed about your request.\n'
                     'they may contact you soon!\n'
@@ -205,7 +207,8 @@ class Boobot:
                 user.oc_username = text
                 s.commit()
                 msg = 'now choose a strong password:'
-                self.input_dispatcher[user.id] = self.openconnect_add_data_password
+                self.input_dispatcher[user.id] = \
+                        self.openconnect_add_data_password
         else:
             msg = (
                     'username must start with a-zA-Z\n'
@@ -265,27 +268,34 @@ class Boobot:
         start_handler = CommandHandler('start', self.start)
         self.dispatcher.add_handler(start_handler)
 
-        admin_add_user_handler = MessageHandler(Filters.regex('^ADD \d+$'), self.admin_add_user)
+        admin_add_user_handler = MessageHandler(Filters.regex('^ADD \d+$'),
+                self.admin_add_user)
         self.dispatcher.add_handler(admin_add_user_handler)
 
-        mainmenu_handler = MessageHandler(Filters.regex('^main menu$'), self.start)
+        mainmenu_handler = MessageHandler(Filters.regex('^main menu$'),
+                self.start)
         self.dispatcher.add_handler(mainmenu_handler)
 
-        openconnect_handler = MessageHandler(Filters.regex('^openconnect$'), self.openconnect)
+        openconnect_handler = MessageHandler(Filters.regex('^openconnect$'),
+                self.openconnect)
         self.dispatcher.add_handler(openconnect_handler)
 
-        mtproto_handler = MessageHandler(Filters.regex('^mtproto$'), self.mtproto)
+        mtproto_handler = MessageHandler(Filters.regex('^mtproto$'),
+                self.mtproto)
         self.dispatcher.add_handler(mtproto_handler)
 
         openconnect_show_data_handler = \
-            MessageHandler(Filters.regex('^show openconnect data$'), self.openconnect_show_data)
+            MessageHandler(Filters.regex('^show openconnect data$'),
+                    self.openconnect_show_data)
         self.dispatcher.add_handler(openconnect_show_data_handler)
 
         openconnect_add_data_handler = \
-            MessageHandler(Filters.regex('^add openconnect data$'), self.openconnect_add_data)
+            MessageHandler(Filters.regex('^add openconnect data$'),
+                    self.openconnect_add_data)
         self.dispatcher.add_handler(openconnect_add_data_handler)
 
-        user_input_handler = MessageHandler(Filters.regex('.*'), self.user_input)
+        user_input_handler = MessageHandler(Filters.regex('.*'),
+                self.user_input)
         self.dispatcher.add_handler(user_input_handler)
 
 
