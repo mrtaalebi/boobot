@@ -102,8 +102,9 @@ class Boobot:
                 ]    
         ]
         msg = 'Horray! now you\'re registered!'
-        self.send_keyboard(update, keyboard, 'msg')
-        context.bot.send_message(user_id, msg)
+        context.bot.send_message(self.admin_id, f'user {user_id} registered')
+        reply_keyboard = ReplyKeyboardMarkup(keyboard)
+        context.bot.send_message(user_id, msg, reply_markup=reply_keyboard)
 
 
     @check_user
