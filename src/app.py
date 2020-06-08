@@ -23,6 +23,7 @@ class Boobot:
 
         self.db = DB(engine_uri)
         
+        self.admin_id = admin_id
         self.oc_host = oc_host
         self.mtproto_proxy = mtproto_proxy
 
