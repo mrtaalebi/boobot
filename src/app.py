@@ -97,7 +97,7 @@ class Boobot:
         ]
         msg = 'enter a username for openconnect:'
         self.send_keyboard(update, keyboard, msg)
-        self.input_dispatcher[user.id] = self.opetconnect_add_data_username
+        self.input_dispatcher[user.id] = self.openconnect_add_data_username
 
 
     def openconnect_add_data_username(self, update, context):
@@ -115,7 +115,7 @@ class Boobot:
             s.commit()
             msg = 'now choose a strong password:'
             self.send_keyboard(update, keyboard, msg)
-            self.input_dispatcher[user.id] = self.opetconnect_add_data_password
+            self.input_dispatcher[user.id] = self.openconnect_add_data_password
         else:
             msg = (
                     'username must start with a-zA-Z\n'
