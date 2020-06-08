@@ -3,7 +3,7 @@ import logging
 import json
 
 
-from telegram.ext import Updater, CommandHandler, RegexHandler, ConversationHandler
+from telegram.ext import Updater, CommandHandler, MessageHandler
 from telegram import InlineKeyboardButton, ReplyKeyboardMarkup
 
 from src.db import DB, User
@@ -14,6 +14,10 @@ class Boobot:
     def __init__(self, bot_token, engine_uri, log_level='INFO'):
         self.updater = Updater(bot_token, use_context=True)
         self.dispatcher = self.updater.dispatcher
+        self.input_dispatcher = \
+            {
+                #user_id: callback_function
+        }
 
         self.db = DB(engine_uri)
 
@@ -92,7 +96,7 @@ class Boobot:
         ]
         msg = 'enter a username for openconnect:'
         self.send_keyboard(update, keyboard, msg)
-        return 'openconnect_username'
+        self.input_dispatcher[user.id] = self.opetconnect_add_data_username
 
 
     def openconnect_add_data_username(self, update, context):
@@ -110,7 +114,7 @@ class Boobot:
             s.commit()
             msg = 'now choose a strong password:'
             self.send_keyboard(update, keyboard, msg)
-            return 'openconnect_password'
+            self.input_dispatcher[user.id] = self.opetconnect_add_data_password
         else:
             msg = (
                     'username must start with a-zA-Z\n'
@@ -118,7 +122,6 @@ class Boobot:
                     'and be atleast 3 characters\n'
             )
             self.send_keyboard(update, keyboard, msg)
-            return 'openconnect_username'
 
 
     def openconnect_add_data_password(self, update, context):
@@ -146,41 +149,44 @@ class Boobot:
 
             msg = 'nice! your openconnect account will be ready in a second.'
             self.send_keyboard(update, keyboard, msg)
-            return -1
+            self.input_dispatcher[user.id] = None
         else:
             msg = 'password must be >=8 characters'
             self.send_keyboard(update, keyboard, msg)
-            return 'openconnect_password'
 
 
-    def cancel(self, update, context):
-        start(update, context)
-                    
+    def user_input(self, update, context):
+        callback = self.input_dispatcher[update.message.from_user.id]
+        if callback:
+            return callback(update, context)
+        else:
+            keyboard = [
+                InlineKeyboardButton('main menu'),
+            ]
+            msg = 'can\'t understand what to do'
+            self.send_keyboard(update, keyboard, msg)
+
 
     def add_handlers(self):
         start_handler = CommandHandler('start', self.start)
         self.dispatcher.add_handler(start_handler)
 
-        mainmenu_handler = RegexHandler('^main menu$', self.start)
+        mainmenu_handler = MessageHandler('main menu', self.start)
         self.dispatcher.add_handler(mainmenu_handler)
 
-        openconnect_handler = RegexHandler('^openconnect$', self.openconnect)
+        openconnect_handler = MessageHandler('openconnect', self.openconnect)
         self.dispatcher.add_handler(openconnect_handler)
 
         openconnect_show_data_handler = \
-            RegexHandler('^show openconnect data$', self.openconnect_show_data)
+            MessageHandler('show openconnect data', self.openconnect_show_data)
         self.dispatcher.add_handler(openconnect_show_data_handler)
 
-        openconnect_add_data_handler = ConversationHandler(
-            entry_points=[RegexHandler(
-                '^add openconnect account$',
-                self.openconnect_add_data)],
-            states={
-                'openconnect_username': [RegexHandler('^.*|/cancel$', self.openconnect_add_data_username)],
-                'openconnect_password': [RegexHandler('^.*|/cancel$', self.openconnect_add_data_password)],
-            },
-            fallbacks=[CommandHandler('cancel', self.cancel)],
-        )
+        openconnect_add_data_handler = \
+            MessageHandler('add openconnect data', self.openconnect_add_data)
+        self.dispatcher.add_handler(openconnect_add_data_handler)
+
+        user_input_handler = MessageHandler(Filters.regex('.*'), user_input)
+        self.dispatcher.add_handler(user_input_handler)
 
 
     def run(self):
