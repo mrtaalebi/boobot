@@ -24,6 +24,7 @@ class Boobot:
         self.db = DB(engine_uri)
         
         self.oc_host = oc_host
+        self.mtproto_proxy = mtproto_proxy
 
         logging.basicConfig(
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
