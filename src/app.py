@@ -157,9 +157,9 @@ class Boobot:
 
 
     def user_input(self, update, context):
-        callback = self.input_dispatcher[update.message.from_user.id]
-        if callback:
-            return callback(update, context)
+        user_id = update.message.from_user.id
+        if user_id in self.input_dispatcher:
+            return self.input_dispatcher[user_id](update, context)
         else:
             keyboard = [
                 InlineKeyboardButton('main menu'),
@@ -172,18 +172,18 @@ class Boobot:
         start_handler = CommandHandler('start', self.start)
         self.dispatcher.add_handler(start_handler)
 
-        mainmenu_handler = MessageHandler(Filters.regex('main menu'), self.start)
+        mainmenu_handler = MessageHandler(Filters.regex('^main menu$'), self.start)
         self.dispatcher.add_handler(mainmenu_handler)
 
-        openconnect_handler = MessageHandler(Filters.regex('openconnect'), self.openconnect)
+        openconnect_handler = MessageHandler(Filters.regex('^openconnect$'), self.openconnect)
         self.dispatcher.add_handler(openconnect_handler)
 
         openconnect_show_data_handler = \
-            MessageHandler(Filters.regex('show openconnect data'), self.openconnect_show_data)
+            MessageHandler(Filters.regex('^show openconnect data$'), self.openconnect_show_data)
         self.dispatcher.add_handler(openconnect_show_data_handler)
 
         openconnect_add_data_handler = \
-            MessageHandler(Filters.regex('add openconnect data'), self.openconnect_add_data)
+            MessageHandler(Filters.regex('^add openconnect data$'), self.openconnect_add_data)
         self.dispatcher.add_handler(openconnect_add_data_handler)
 
         user_input_handler = MessageHandler(Filters.regex('.*'), self.user_input)
