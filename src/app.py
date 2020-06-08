@@ -109,7 +109,7 @@ class Boobot:
     @check_user
     def mtproto(self, update, context):
         keyboard = [
-            [InlineKeyboardButton('main menu'),]
+            [InlineKeyboardButton('main menu')]
         ]
         msg = self.mtproto_proxy
         self.send_keyboard(update, keyboard, msg)
@@ -119,8 +119,8 @@ class Boobot:
     def openconnect(self, update, context):
         keyboard = [
             [InlineKeyboardButton('show openconnect data'),
-            InlineKeyboardButton('add openconnect data'),]
-            [InlineKeyboardButton('main menu'),]
+            InlineKeyboardButton('add openconnect data')]
+            [InlineKeyboardButton('main menu')]
         ]
         self.send_keyboard(update, keyboard, 'openconnect')
 
@@ -132,12 +132,12 @@ class Boobot:
         if user == None:
             keyboard = [
                 [InlineKeyboardButton('add openconnect data'),
-                InlineKeyboardButton('main menu'),]
+                InlineKeyboardButton('main menu')]
             ]
             self.send_keyboard(update, keyboard, 'nothing here!')
         else:
             keyboard = [
-                [InlineKeyboardButton('main menu'),]
+                [InlineKeyboardButton('main menu')]
             ]
             self.send_keyboard(update, keyboard,
                 (
@@ -152,7 +152,7 @@ class Boobot:
     def openconnect_add_data(self, update, context):
         user = self.db.get_user(update.message.from_user)
         keyboard = [
-            [InlineKeyboardButton('main menu'),]
+            [InlineKeyboardButton('main menu')]
         ]
         if user.oc_username and user.oc_password:
             msg = 'you already have an openconnect account'
@@ -169,7 +169,7 @@ class Boobot:
         text = update.message.text
         keyboard = [
             [InlineKeyboardButton('openconnect'),
-            InlineKeyboardButton('main menu'),]
+            InlineKeyboardButton('main menu')]
         ]
         if re.match('\w{3,}', text):
             users = self.db.query(User, User.oc_username == text)
@@ -197,7 +197,7 @@ class Boobot:
         text = update.message.text
         keyboard = [
             [InlineKeyboardButton('openconnect'),
-            InlineKeyboardButton('main menu'),]
+            InlineKeyboardButton('main menu')]
         ]
         if 8 <= len(text) <= 128:
             s = self.db.session()
@@ -231,7 +231,7 @@ class Boobot:
             return self.input_dispatcher[user_id](update, context)
         else:
             keyboard = [
-                [InlineKeyboardButton('main menu'),]
+                [InlineKeyboardButton('main menu')]
             ]
             msg = 'can\'t understand what to do'
             self.send_keyboard(update, keyboard, msg)
