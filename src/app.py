@@ -58,7 +58,7 @@ class Boobot:
             user = update.message.from_user
             if self.db.get_user(user) == None:
                 keyboard = [
-                    [InlineKeyboardButton(f'ADD @{user.id}')],
+                    [InlineKeyboardButton(f'ADD {user.id}')],
                     [InlineKeyboardButton('main menu')]
                 ]
                 admin_msg = (
