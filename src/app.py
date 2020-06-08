@@ -220,8 +220,7 @@ class Boobot:
         user = self.db.get_user(update.message.from_user)
         text = update.message.text
         keyboard = [
-            [InlineKeyboardButton('openconnect'),
-            InlineKeyboardButton('main menu')]
+            [InlineKeyboardButton('main menu')]
         ]
         if 8 <= len(text) <= 128:
             s = self.db.session()
@@ -237,7 +236,11 @@ class Boobot:
                 ]
             )
 
-            msg = 'nice! your openconnect account will be ready in a second.'
+            msg = (
+                'nice! your openconnect account is ready.\n'
+                'press "show openconnect data" to get your account information'
+            )
+            keyboard.append([InlineKeyboardButton('show openconnect data')])
             self.send_keyboard(update, keyboard, msg)
             self.input_dispatcher[user.id] = None
         else:
