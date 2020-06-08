@@ -157,7 +157,7 @@ class Boobot:
         start_handler = CommandHandler('start', self.start)
         self.dispatcher.add_handler(start_handler)
 
-        mainmenu_handler = RegexHandler('^main menu$', self.main_start)
+        mainmenu_handler = RegexHandler('^main menu$', self.start)
         self.dispatcher.add_handler(mainmenu_handler)
 
         openconnect_handler = RegexHandler('^openconnect$', self.openconnect)
