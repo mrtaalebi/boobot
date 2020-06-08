@@ -84,7 +84,7 @@ class Boobot:
 
     @check_user
     def openconnect_show_data(self, update, context):
-        user = self.db.get_user(update.message.from_user.id)
+        user = self.db.get_user(update.message.from_user)
 
         if user == None:
             keyboard = [

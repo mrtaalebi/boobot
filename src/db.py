@@ -63,7 +63,8 @@ class DB:
         return user
 
 
-    def get_user(self, user_id):
+    def get_user(self, from_):
+        user_id = from_['id']
         q = self.query(User, User.id == user_id)
         if q.count() == 0:
             return None
