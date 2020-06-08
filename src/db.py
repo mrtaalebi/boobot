@@ -57,7 +57,7 @@ class DB:
             user = User(
                     id=user_id,
                     name=from_['first_name'],
-                    lang=from_['language-code'],
+                    lang=from_['language_code'],
                     oc_username='',
                     oc_password='',
                 )
