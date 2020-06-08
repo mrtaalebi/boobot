@@ -57,7 +57,6 @@ class Boobot:
                             })
                     },
                 ]    
-            ]
         ]
         self.send_keyboard(update, keyboard, 'main menu')
 
