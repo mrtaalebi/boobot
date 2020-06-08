@@ -82,7 +82,7 @@ class Boobot:
             return
         
         text = update.message.text
-        user_id = text[1]
+        user_id = text.split()[1]
         chat = context.bot.get_chat(user_id)
         self.db.create_user(chat)
         msg = 'Horray! now you\'re registered!'
