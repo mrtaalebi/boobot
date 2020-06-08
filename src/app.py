@@ -108,7 +108,7 @@ class Boobot:
             InlineKeyboardButton('main menu'),
         ]
         if re.match('\w{3,}', text) and \
-                self.db.query(User, oc_username == text).count() == 0:        
+                self.db.query(User, User.oc_username == text).count() == 0:        
             s = self.db.session()
             user = s.query(User).filter(User.id == user.id).first()
             user.oc_username = text
