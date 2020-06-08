@@ -231,12 +231,9 @@ class Boobot:
                 f.write('{user.oc_password}\n{user.oc_password}\n')
             subprocess.run(
                 [
-                    'ocpasswd',
-                    '-c',
+                    './add_user.sh',
                     '/etc/ocserv/pass.wd',
-                    user.oc_username,
-                    '<',
-                    'boo.temp'
+                    f'{user.oc_password}',
                 ]
             )
 
