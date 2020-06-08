@@ -52,7 +52,7 @@ class DB:
     def get_or_create_user(self, from_):
         user_id = from_['id']
         q = self.query(User, User.id == user_id)
-        if len(q) == 0:
+        if q.count() == 0:
             user = User(
                     id=user_id,
                     name=from_['first_name'],
@@ -71,7 +71,7 @@ class DB:
 
     def get_oc_config(self, user_id):
         q = self.query(OC_Config, OC_Config.user_id == user_id)
-        if len(q) == 0:
+        if q.count() == 0:
             return None
-        elif len(q) == 1:
+        elif q.count() == 1:
             return q.first()
