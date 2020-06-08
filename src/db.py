@@ -39,6 +39,7 @@ class DB:
                 return func(*args, **kwargs)
             except Exception as e:
                 logging.exception(str(e))
+        return wrapper
 
     
     @db_transact
