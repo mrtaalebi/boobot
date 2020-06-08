@@ -69,7 +69,7 @@ class Boobot:
     def openconnect(self, update, context):
         keyboard = [
             InlineKeyboardButton('show openconnect data'),
-            InlineKeyboardButton('add openconnect account')
+            InlineKeyboardButton('add openconnect data')
         ]
         self.send_keyboard(update, keyboard, 'openconnect')
 
@@ -78,7 +78,7 @@ class Boobot:
         oc_config = self.db.get_user(update.message.from_user.id)
         if oc_config == None:
             keyboard = [
-                InlineKeyboardButton('add openconnect account'),
+                InlineKeyboardButton('add openconnect data'),
                 InlineKeyboardButton('main menu'),
             ]
             self.send_keyboard(update, keyboard, 'nothing here!')
