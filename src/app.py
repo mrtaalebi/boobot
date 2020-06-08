@@ -52,10 +52,39 @@ class Boobot:
     
     def check_user(func):
         def wrapper(*args, **kwargs):
-            print(args)
-            print(kwargs)
+            update, context = args[1], args[2]
+            user = update.message.from_user
+            if self.db.get_user(user).count() == 0:
+                admin_msg = (
+                    'HEY ADMIN!\n'
+                    f'following user wants to join {user.id} {user.username}\n'
+                    'add them with ADD_USER <user_id> command\n'
+                )
+                context.bot.send_message(self.admin_id, admin_msg)
+                msg = (
+                    'admin has been informed about your request.\n'
+                    'they may contact you soon!\n'
+                )
+                update.message.reply_text(text=msg)
+                return
             return func(*args, **kwargs)
         return wrapper
+
+
+    def admin_add_user(self, update, context):
+        user_id = update.message.from_user['id']
+        if user_id != self.admin_id:
+            msg = \
+                'BITCH YOU THOUGHT YOU CAN SEND ADMIN COMMANDS?'
+            update.message.reply_text(text=msg)
+            return
+        
+        text = update.message.text
+        user_id = text[1]
+        chat = context.bot.get_chat(user_id)
+        self.db.create_user(chat)
+        msg = 'Horray! now you\'re registered!'
+        context.bot.send_message(user_id, msg)
 
 
     @check_user
@@ -197,6 +226,9 @@ class Boobot:
     def add_handlers(self):
         start_handler = CommandHandler('start', self.start)
         self.dispatcher.add_handler(start_handler)
+
+        admin_add_user_handler = MessageHandler(Filters.regex('^ADD_USER \w+$'), self.admin_add_user)
+        self.dispatcher.add_handler(admin_add_user_handler)
 
         mainmenu_handler = MessageHandler(Filters.regex('^main menu$'), self.start)
         self.dispatcher.add_handler(mainmenu_handler)
