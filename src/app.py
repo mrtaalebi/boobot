@@ -4,6 +4,7 @@ import json
 
 
 from telegram.ext import Updater, CommandHandler, MessageHandler
+from telegram.ext.filters import Filters
 from telegram import InlineKeyboardButton, ReplyKeyboardMarkup
 
 from src.db import DB, User
@@ -171,18 +172,18 @@ class Boobot:
         start_handler = CommandHandler('start', self.start)
         self.dispatcher.add_handler(start_handler)
 
-        mainmenu_handler = MessageHandler('main menu', self.start)
+        mainmenu_handler = MessageHandler(Filters.regex('main menu'), self.start)
         self.dispatcher.add_handler(mainmenu_handler)
 
-        openconnect_handler = MessageHandler('openconnect', self.openconnect)
+        openconnect_handler = MessageHandler(Filters.regex('openconnect'), self.openconnect)
         self.dispatcher.add_handler(openconnect_handler)
 
         openconnect_show_data_handler = \
-            MessageHandler('show openconnect data', self.openconnect_show_data)
+            MessageHandler(Filters.regex('show openconnect data'), self.openconnect_show_data)
         self.dispatcher.add_handler(openconnect_show_data_handler)
 
         openconnect_add_data_handler = \
-            MessageHandler('add openconnect data', self.openconnect_add_data)
+            MessageHandler(Filters.regex('add openconnect data'), self.openconnect_add_data)
         self.dispatcher.add_handler(openconnect_add_data_handler)
 
         user_input_handler = MessageHandler(Filters.regex('.*'), user_input)
