@@ -1,2 +1,2 @@
 #!/bin/bash
-ocpasswd -c $1 $2 <<< "$3\n$3\n"
+ocpasswd -c /etc/ocserv/pass.wd $1 <<< "$2\n$2\n"
