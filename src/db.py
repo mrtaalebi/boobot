@@ -42,11 +42,10 @@ class DB:
         s.commit()
 
     
-    def query(self, class_, *filter_=[]):
+    def query(self, class_, filter_):
         s = self.session()
         q = s.query(class_)
-        for f in filter_:
-            q = q.filter(f)
+        q = q.filter(f)
         return q
 
     
