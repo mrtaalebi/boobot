@@ -43,7 +43,7 @@ class Boobot:
 
 
     def start(self, update, context):
-        user = self.db.get_or_create_user(update['from'])
+        user = self.db.get_or_create_user(update.message.from_user)
         keyboard = [
             InlineKeyboardButton(option['text'])
             for option in
@@ -70,7 +70,7 @@ class Boobot:
 
 
     def openconnect_show_data(self, update, context):
-        oc_config = self.db.get_oc_config(update['from']['id'])
+        oc_config = self.db.get_oc_config(update.message.from_user.id)
         if oc_config == None:
             keyboard = [
                 InlineKeyboardButton('add openconnect account'),
@@ -85,7 +85,7 @@ class Boobot:
 
 
     def openconnect_add_data(self, update, context):
-        user = self.db.get_or_create_user(update['from'])
+        user = self.db.get_or_create_user(update.message.from_user.id)
         keyboard = [
             InlineKeyboardButton('openconnect'),
             InlineKeyboardButton('main menu'),
@@ -96,7 +96,7 @@ class Boobot:
 
 
     def openconnect_add_data_username(self, update, context):
-        user = self.db.get_or_create_user(update['from'])
+        user = self.db.get_or_create_user(update.message.from_user.id)
         text = update.message.text
         keyboard = [
             InlineKeyboardButton('openconnect'),
@@ -122,7 +122,7 @@ class Boobot:
 
 
     def openconnect_add_data_password(self, update, context):
-        user = self.db.get_or_create_user(update['from'])
+        user = self.db.get_or_create_user(update.message.from_user.id)
         text = update.message.text
         keyboard = [
             InlineKeyboardButton('openconnect'),
