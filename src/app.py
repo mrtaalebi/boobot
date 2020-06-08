@@ -13,7 +13,7 @@ from src.db import DB, User
 
 class Boobot:
 
-    def __init__(self, bot_token, engine_uri, log_level='INFO'):
+    def __init__(self, bot_token, admin_id, engine_uri, oc_host, log_level='INFO'):
         self.updater = Updater(bot_token, use_context=True)
         self.dispatcher = self.updater.dispatcher
         self.input_dispatcher = \
@@ -22,6 +22,8 @@ class Boobot:
         }
 
         self.db = DB(engine_uri)
+        
+        self.oc_host = oc_host
 
         logging.basicConfig(
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -45,28 +47,33 @@ class Boobot:
         update.message.reply_text(
             text=text,
             reply_markup=reply_keyboard
-        )
+            )
+
+    
+    def check_user(func):
+        def wrapper(*args, **kwargs):
+            print(args)
+            print(kwargs)
+            return func(*args, **kwargs)
+        return wrapper
 
 
+    @check_user
     def start(self, update, context):
-        user = self.db.get_or_create_user(update.message.from_user)
+        user = self.db.get_user(update.message.from_user)
         keyboard = [
             InlineKeyboardButton(option['text'])
             for option in
                 [
                     {
                         'text': 'openconnect',
-                        'data': self.build_callback(
-                            {
-                                'd1': 'oc',
-                                'd2': 'm1'
-                            })
                     },
                 ]    
         ]
         self.send_keyboard(update, keyboard, 'main menu')
 
-
+    
+    @check_user
     def openconnect(self, update, context):
         keyboard = [
             InlineKeyboardButton('show openconnect data'),
@@ -75,9 +82,11 @@ class Boobot:
         self.send_keyboard(update, keyboard, 'openconnect')
 
 
+    @check_user
     def openconnect_show_data(self, update, context):
-        oc_config = self.db.get_user(update.message.from_user.id)
-        if oc_config == None:
+        user = self.db.get_user(update.message.from_user.id)
+
+        if user == None:
             keyboard = [
                 InlineKeyboardButton('add openconnect data'),
                 InlineKeyboardButton('main menu'),
@@ -87,22 +96,33 @@ class Boobot:
             keyboard = [
                 InlineKeyboardButton('main menu'),
             ]
-            self.send_keyboard(update, keyboard, str(oc_config))
+            self.send_keyboard(update, keyboard,
+                (
+                    f'host: {self.oc_host}\n'
+                    f'user: {user.oc_username}\n'
+                    f'pass: {user.oc_password}\n'
+                )
+            )
 
 
+    @check_user
     def openconnect_add_data(self, update, context):
-        user = self.db.get_or_create_user(update.message.from_user)
+        user = self.db.get_user(update.message.from_user)
         keyboard = [
-            InlineKeyboardButton('openconnect'),
             InlineKeyboardButton('main menu'),
         ]
-        msg = 'enter a username for openconnect:'
+        if user.oc_username and user.oc_passowrd:
+            msg = 'you already have an openconnect account'
+            keyboard.append(InlineKeyboardButton('show openconnect data'))
+        else:
+            msg = 'enter a username for openconnect:'
+            self.input_dispatcher[user.id] = self.openconnect_add_data_username
         self.send_keyboard(update, keyboard, msg)
-        self.input_dispatcher[user.id] = self.openconnect_add_data_username
 
 
+    @check_user
     def openconnect_add_data_username(self, update, context):
-        user = self.db.get_or_create_user(update.message.from_user)
+        user = self.db.get_user(update.message.from_user)
         text = update.message.text
         keyboard = [
             InlineKeyboardButton('openconnect'),
@@ -128,8 +148,9 @@ class Boobot:
         self.send_keyboard(update, keyboard, msg)
 
 
+    @check_user
     def openconnect_add_data_password(self, update, context):
-        user = self.db.get_or_create_user(update.message.from_user)
+        user = self.db.get_user(update.message.from_user)
         text = update.message.text
         keyboard = [
             InlineKeyboardButton('openconnect'),
@@ -160,6 +181,7 @@ class Boobot:
             self.send_keyboard(update, keyboard, msg)
 
 
+    @check_user
     def user_input(self, update, context):
         user_id = update.message.from_user.id
         if user_id in self.input_dispatcher:

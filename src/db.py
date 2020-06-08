@@ -50,24 +50,17 @@ class DB:
         return q
 
     
-    def get_or_create_user(self, from_):
+    def create_user(self, from_):
         user_id = from_['id']
-        q = self.query(User, User.id == user_id)
-        if q.count() == 0:
-            user = User(
-                    id=user_id,
-                    name=from_['first_name'],
-                    lang=from_['language_code'],
-                    oc_username='',
-                    oc_password='',
-                )
-            self.add(user)
-            options = [
-
-            ]
-            return user
-        else:
-            return q.first()
+        user = User(
+                id=user_id,
+                name=from_['first_name'],
+                lang=from_['language_code'],
+                oc_username='',
+                oc_password='',
+            )
+        self.add(user)
+        return user
 
 
     def get_user(self, user_id):
