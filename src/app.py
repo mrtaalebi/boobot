@@ -49,7 +49,7 @@ class Boobot:
             for option in
                 [
                     {
-                        'text': msg.get('openconnect', user),
+                        'text': 'openconnect'
                         'data': build_callback(
                             {
                                 'd1': 'oc',
