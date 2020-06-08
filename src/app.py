@@ -151,6 +151,10 @@ class Boobot:
             msg = 'password must be >=8 characters'
             self.send_keyboard(update, keyboard, msg)
             return 'openconnect_password'
+
+
+    def cancel(self, update, context):
+        start(update, context)
                     
 
     def add_handlers(self):
