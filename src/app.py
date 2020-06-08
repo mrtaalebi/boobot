@@ -108,22 +108,24 @@ class Boobot:
             InlineKeyboardButton('openconnect'),
             InlineKeyboardButton('main menu'),
         ]
-        if re.match('\w{3,}', text) and \
-                self.db.query(User, User.oc_username == text).count() == 0:        
-            s = self.db.session()
-            user = s.query(User).filter(User.id == user.id).first()
-            user.oc_username = text
-            s.commit()
-            msg = 'now choose a strong password:'
-            self.send_keyboard(update, keyboard, msg)
-            self.input_dispatcher[user.id] = self.openconnect_add_data_password
+        if re.match('\w{3,}', text):
+            users = self.db.query(User, User.oc_username == text)
+            if users.count() == 1 and users.first().id != user.id:
+                msg = 'a user has already choosen this username!'
+            else:
+                s = self.db.session()
+                user = s.query(User).filter(User.id == user.id).first()
+                user.oc_username = text
+                s.commit()
+                msg = 'now choose a strong password:'
+                self.input_dispatcher[user.id] = self.openconnect_add_data_password
         else:
             msg = (
                     'username must start with a-zA-Z\n'
                     'contain only a-zA-Z0-9\n'
                     'and be atleast 3 characters\n'
             )
-            self.send_keyboard(update, keyboard, msg)
+        self.send_keyboard(update, keyboard, msg)
 
 
     def openconnect_add_data_password(self, update, context):
