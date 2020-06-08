@@ -70,8 +70,8 @@ class DB:
             return q.first()
 
 
-    def get_oc_config(self, user_id):
-        q = self.query(OC_Config, OC_Config.user_id == user_id)
+    def get_user(self, user_id):
+        q = self.query(User, User.user_id == user_id)
         if q.count() == 0:
             return None
         elif q.count() == 1:
