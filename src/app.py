@@ -177,15 +177,14 @@ class Boobot:
     @check_user
     def openconnect_add_data(self, update, context):
         user = self.db.get_user(update.message.from_user)
-        keyboard = [
-            [InlineKeyboardButton('main menu')]
-        ]
+        keyboard = []
         if user.oc_username and user.oc_password:
             msg = 'you already have an openconnect account'
             keyboard.append([InlineKeyboardButton('show openconnect data')])
         else:
             msg = 'enter a username for openconnect:'
             self.input_dispatcher[user.id] = self.openconnect_add_data_username
+        keyboard.append([InlineKeyboardButton('main menu')])
         self.send_keyboard(update, keyboard, msg)
 
 
