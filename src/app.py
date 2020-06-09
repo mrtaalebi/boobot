@@ -111,16 +111,10 @@ class Boobot:
     def start(self, update, context):
         user = self.db.get_user(update.message.from_user)
         keyboard = [
-            [InlineKeyboardButton(option['text'])]
-            for option in
-                [
-                    {
-                        'text': 'openconnect',
-                    },
-                    {
-                        'text': 'mtproto',
-                    },
-                ]    
+            [
+                InlineKeyboardButton('openconnect'),
+                InlineKeyboardButton('mtproto')
+            ]
         ]
         self.send_keyboard(update, keyboard, 'main menu')
 
