@@ -93,16 +93,9 @@ class Boobot:
         chat = context.bot.get_chat(user_id)
         self.db.create_user(chat)
         keyboard = [
-            [InlineKeyboardButton(option['text'])
-            for option in
-                [
-                    {
-                        'text': 'openconnect',
-                    },
-                    {
-                        'text': 'mtproto',
-                    },
-                ]
+            [
+                InlineKeyboardButton('openconnect'),
+                InlineKeyboardButton('mtproto')
             ]
         ]
         admin_keyboard = [
