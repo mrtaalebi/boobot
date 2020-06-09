@@ -93,7 +93,7 @@ class Boobot:
         chat = context.bot.get_chat(user_id)
         self.db.create_user(chat)
         keyboard = [
-            [InlineKeyboardButton(option['text'])]
+            [InlineKeyboardButton(option['text'])
             for option in
                 [
                     {
@@ -102,7 +102,8 @@ class Boobot:
                     {
                         'text': 'mtproto',
                     },
-                ]    
+                ]
+            ]
         ]
         admin_keyboard = [
             [InlineKeyboardButton('main menu')]
