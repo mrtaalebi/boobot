@@ -39,6 +39,7 @@ class DB:
                 x = func(*args, **kwargs)
                 return x
             except Exception as e:
+                logging.debug(e)
                 logging.info('DB TRANSACTION ERROR')
         return wrapper
 
@@ -55,13 +56,25 @@ class DB:
         s = self.session()
         s.add(entry)
         s.commit()
-
+        s.close()
+    
     
     @db_transact
-    def query(self, class_, filter_):
+    def delete(self, user_id):
+        s = self.session()
+        user = s.query(User).filter(User.id == user_id).first()
+        oc_username = user.oc_username
+        s.commit()
+        s.close()
+        return oc_username
+    
+    
+    @db_transact
+    def query(self, class_, filter_=None):
         s = self.session()
         q = s.query(class_)
-        q = q.filter(filter_)
+        if filter_:
+            q = q.filter(filter_)
         return q
 
     
@@ -71,7 +84,7 @@ class DB:
         lang = 'en'
         user = User(
                 id=user_id,
-                name=from_['first_name'],
+                name=from_['first_name'] + ' - ' + from_['last_name'],
                 lang=lang,
                 oc_username='',
                 oc_password='',
@@ -88,3 +101,8 @@ class DB:
             return None
         elif q.count() == 1:
             return q.first()
+
+
+    @db_transact
+    def all_users(self):
+        return self.query(User).all()

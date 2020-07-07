@@ -3,6 +3,7 @@ import logging
 import json
 import re
 import subprocess
+from functools import wraps
 
 from telegram.ext import Updater, CommandHandler, MessageHandler
 from telegram.ext.filters import Filters
@@ -38,11 +39,27 @@ class Boobot:
                 }[log_level]
         )
 
+
+    def def_logger(func):
+        @wraps(func)
+        def wrapper(self, *args, **kwargs):
+            update, context = args[0], args[1]
+            chat = update.message.chat
+            logging.info(
+                (
+                    f'user: {chat.id}, {chat.username}, '
+                    f'{chat.first_name} {chat.last_name} - '
+                    f'call: {func.__name__}'
+                )
+            )
+            return func(self, *args, **kwargs)
+        return wrapper
  
+
     def build_callback(self, data):
         return_value = json.dumps(data)
         if len(return_value) > 64:
-            raise Exception("Callback data is larger tan 64 bytes")
+            raise Exception("Callback data is larger than 64 bytes")
         return return_value
 
 
@@ -57,7 +74,7 @@ class Boobot:
     def check_user(func):
         def wrapper(self, *args, **kwargs):
             update, context = args[0], args[1]
-            user = update.message.from_user
+            user = update.message.chat
             if self.db.get_user(user) == None:
                 keyboard = [
                     [InlineKeyboardButton(f'ADD {user.id}')],
@@ -65,7 +82,7 @@ class Boobot:
                 ]
                 admin_msg = (
                     'HEY ADMIN!\n'
-                    f'following user wants to join {user.id} @{user.username}\n'
+                    f'following user wants to join {user.id} @{user.username} \n'
                 )
                 reply_keyboard = ReplyKeyboardMarkup(keyboard)
                 context.bot.send_message(self.admin_id, admin_msg,
@@ -80,14 +97,22 @@ class Boobot:
         return wrapper
 
 
+    def check_admin(func):
+        def wrapper(self, *args, **kwargs):
+            update, context = args[0], args[1]
+            user_id = update.message.chat.id
+            if str(user_id) != str(self.admin_id):
+                msg = \
+                    'BITCH YOU THOUGHT YOU CAN SEND ADMIN COMMANDS?'
+                update.message.reply_text(text=msg)
+                return
+            return func(self, *args, **kwargs)
+        return wrapper
+
+    
+    @check_admin
+    @def_logger
     def admin_add_user(self, update, context):
-        user_id = update.message.from_user['id']
-        if str(user_id) != str(self.admin_id):
-            msg = \
-                'BITCH YOU THOUGHT YOU CAN SEND ADMIN COMMANDS?'
-            update.message.reply_text(text=msg)
-            return
-        
         text = update.message.text
         user_id = text.split()[1]
         chat = context.bot.get_chat(user_id)
@@ -107,9 +132,94 @@ class Boobot:
         context.bot.send_message(user_id, msg, reply_markup=reply_keyboard)
 
 
+    @check_admin
+    @def_logger
+    def admin_list_users(self, update, context):
+        users = self.db.all_users()
+
+        keyboard = [
+            [
+                InlineKeyboardButton('main menu'),
+            ]
+        ] + [
+            [
+                InlineKeyboardButton(f'{user.name}'),
+                InlineKeyboardButton(f'DEL {user.id}')
+
+            ] for user in users
+        ]
+        self.send_keyboard(update, keyboard, 'all users:')
+
+
+    @check_admin
+    @def_logger
+    def admin_delete_user(self, update, context):
+        text = update.message.text
+        user_id = text.split()[1]
+        oc_username = self.db.delete(user_id)
+
+        subprocess.run(
+            [
+                self.base_dir + '/src/delete_user.sh',
+                f'{oc_username}',
+            ]
+        )
+
+        keyboard = [
+            [
+                InlineKeyboardButton('openconnect'),
+                InlineKeyboardButton('mtproto')
+            ]
+        ]
+        admin_keyboard = [
+            [InlineKeyboardButton('main menu')]
+        ]
+        self.send_keyboard(update, admin_keyboard, 'deleted')
+        msg = 'How sad :( Hope to see you soon again!'
+        reply_keyboard = ReplyKeyboardMarkup(keyboard)
+        context.bot.send_message(user_id, msg, reply_markup=reply_keyboard)
+
+
+    @check_admin
+    @def_logger
+    def admin_sendtoall(self, update, context):
+        user_id = update.message.chat.id
+        self.input_dispatcher[user_id] = self.admin_sendtoall_message
+        msg = 'Ok. now send me the message or cancel'
+        keyboard = [
+            [
+                InlineKeyboardButton('cancel')
+            ],
+            [
+                InlineKeyboardButton('openconnect'),
+                InlineKeyboardButton('mtproto')
+            ]
+        ]
+        self.send_keyboard(update, keyboard, msg)
+
+
+    @check_admin
+    @def_logger
+    def admin_sendtoall_message(self, update, context):
+        user_id = update.message.chat.id
+        input_dispatcher[user_id] = None
+        text = update.message.text
+        users = db.all_users()
+        keyboard = [
+            [
+                InlineKeyboardButton('openconnect'),
+                InlineKeyboardButton('mtproto')
+            ]
+        ]
+        reply_keyboard = ReplyKeyboardMarkup(keyboard)
+        for user in users:
+            context.bot.send_message(user.id, text, reply_markup=reply_keyboard)
+
+
     @check_user
+    @def_logger
     def start(self, update, context):
-        user = self.db.get_user(update.message.from_user)
+        user = self.db.get_user(update.message.chat)
         keyboard = [
             [
                 InlineKeyboardButton('openconnect'),
@@ -120,6 +230,7 @@ class Boobot:
 
 
     @check_user
+    @def_logger
     def mtproto(self, update, context):
         keyboard = [
             [InlineKeyboardButton('main menu')]
@@ -129,6 +240,7 @@ class Boobot:
 
     
     @check_user
+    @def_logger
     def openconnect(self, update, context):
         keyboard = [
             [InlineKeyboardButton('show openconnect data'),
@@ -139,8 +251,9 @@ class Boobot:
 
 
     @check_user
+    @def_logger
     def openconnect_show_data(self, update, context):
-        user = self.db.get_user(update.message.from_user)
+        user = self.db.get_user(update.message.chat)
 
         if not user.oc_username or not user.oc_password:
             keyboard = [
@@ -163,8 +276,9 @@ class Boobot:
 
 
     @check_user
+    @def_logger
     def openconnect_add_data(self, update, context):
-        user = self.db.get_user(update.message.from_user)
+        user = self.db.get_user(update.message.chat)
         keyboard = []
         if user.oc_username and user.oc_password:
             msg = 'you already have an openconnect account'
@@ -177,8 +291,9 @@ class Boobot:
 
 
     @check_user
+    @def_logger
     def openconnect_add_data_username(self, update, context):
-        user = self.db.get_user(update.message.from_user)
+        user = self.db.get_user(update.message.chat)
         text = update.message.text
         keyboard = [
             [InlineKeyboardButton('openconnect'),
@@ -206,8 +321,9 @@ class Boobot:
 
 
     @check_user
+    @def_logger
     def openconnect_add_data_password(self, update, context):
-        user = self.db.get_user(update.message.from_user)
+        user = self.db.get_user(update.message.chat)
         text = update.message.text
         keyboard = [
             [InlineKeyboardButton('main menu')]
@@ -220,7 +336,7 @@ class Boobot:
             
             subprocess.run(
                 [
-                    self.base_dir + 'src/add_user.sh',
+                    self.base_dir + '/src/add_user.sh',
                     f'{user.oc_username}',
                     f'{user.oc_password}',
                 ]
@@ -239,8 +355,9 @@ class Boobot:
 
 
     @check_user
+    @def_logger
     def user_input(self, update, context):
-        user_id = update.message.from_user.id
+        user_id = update.message.chat.id
         if user_id in self.input_dispatcher:
             return self.input_dispatcher[user_id](update, context)
         else:
@@ -255,9 +372,21 @@ class Boobot:
         start_handler = CommandHandler('start', self.start)
         self.dispatcher.add_handler(start_handler)
 
+        admin_list_users_handler = MessageHandler(Filters.regex('^LIST$'),
+                self.admin_list_users)
+        self.dispatcher.add_handler(admin_list_users_handler)
+
         admin_add_user_handler = MessageHandler(Filters.regex('^ADD \d+$'),
                 self.admin_add_user)
         self.dispatcher.add_handler(admin_add_user_handler)
+
+        admin_delete_user_handler = MessageHandler(Filters.regex('^DEL \d+$'),
+                self.admin_delete_user)
+        self.dispatcher.add_handler(admin_delete_user_handler)
+
+        admin_sendtoall_handler = MessageHandler(Filters.regex('^SENDTOALL'),
+                self.admin_sendtoall)
+        self.dispatcher.add_handler(admin_sendtoall_handler)
 
         mainmenu_handler = MessageHandler(Filters.regex('^main menu$'),
                 self.start)
