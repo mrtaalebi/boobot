@@ -110,8 +110,8 @@ class Boobot:
         return wrapper
 
     
-    @check_admin
     @def_logger
+    @check_admin
     def admin_add_user(self, update, context):
         text = update.message.text
         user_id = text.split()[1]
@@ -132,8 +132,8 @@ class Boobot:
         context.bot.send_message(user_id, msg, reply_markup=reply_keyboard)
 
 
-    @check_admin
     @def_logger
+    @check_admin
     def admin_list_users(self, update, context):
         users = self.db.all_users()
 
@@ -151,8 +151,8 @@ class Boobot:
         self.send_keyboard(update, keyboard, 'all users:')
 
 
-    @check_admin
     @def_logger
+    @check_admin
     def admin_delete_user(self, update, context):
         text = update.message.text
         user_id = text.split()[1]
@@ -180,8 +180,8 @@ class Boobot:
         context.bot.send_message(user_id, msg, reply_markup=reply_keyboard)
 
 
-    @check_admin
     @def_logger
+    @check_admin
     def admin_sendtoall(self, update, context):
         user_id = update.message.chat.id
         self.input_dispatcher[user_id] = self.admin_sendtoall_message
@@ -198,8 +198,8 @@ class Boobot:
         self.send_keyboard(update, keyboard, msg)
 
 
-    @check_admin
     @def_logger
+    @check_admin
     def admin_sendtoall_message(self, update, context):
         user_id = update.message.chat.id
         input_dispatcher[user_id] = None
@@ -216,8 +216,8 @@ class Boobot:
             context.bot.send_message(user.id, text, reply_markup=reply_keyboard)
 
 
-    @check_user
     @def_logger
+    @check_user
     def start(self, update, context):
         user = self.db.get_user(update.message.chat)
         keyboard = [
@@ -229,8 +229,8 @@ class Boobot:
         self.send_keyboard(update, keyboard, 'main menu')
 
 
-    @check_user
     @def_logger
+    @check_user
     def mtproto(self, update, context):
         keyboard = [
             [InlineKeyboardButton('main menu')]
@@ -239,8 +239,8 @@ class Boobot:
         self.send_keyboard(update, keyboard, msg)
 
     
-    @check_user
     @def_logger
+    @check_user
     def openconnect(self, update, context):
         keyboard = [
             [InlineKeyboardButton('show openconnect data'),
@@ -250,8 +250,8 @@ class Boobot:
         self.send_keyboard(update, keyboard, 'openconnect')
 
 
-    @check_user
     @def_logger
+    @check_user
     def openconnect_show_data(self, update, context):
         user = self.db.get_user(update.message.chat)
 
@@ -275,8 +275,8 @@ class Boobot:
             )
 
 
-    @check_user
     @def_logger
+    @check_user
     def openconnect_add_data(self, update, context):
         user = self.db.get_user(update.message.chat)
         keyboard = []
@@ -290,8 +290,8 @@ class Boobot:
         self.send_keyboard(update, keyboard, msg)
 
 
-    @check_user
     @def_logger
+    @check_user
     def openconnect_add_data_username(self, update, context):
         user = self.db.get_user(update.message.chat)
         text = update.message.text
@@ -320,8 +320,8 @@ class Boobot:
         self.send_keyboard(update, keyboard, msg)
 
 
-    @check_user
     @def_logger
+    @check_user
     def openconnect_add_data_password(self, update, context):
         user = self.db.get_user(update.message.chat)
         text = update.message.text
@@ -354,8 +354,8 @@ class Boobot:
             self.send_keyboard(update, keyboard, msg)
 
 
-    @check_user
     @def_logger
+    @check_user
     def user_input(self, update, context):
         user_id = update.message.chat.id
         if user_id in self.input_dispatcher:
