@@ -8,7 +8,7 @@ from sqlalchemy.orm import sessionmaker
 Base = declarative_base()
 
 
-class User(Base):
+class BooUser(Base):
     
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
@@ -62,7 +62,7 @@ class DB:
     @db_transact
     def delete(self, user_id):
         s = self.session()
-        user = s.query(User).filter(User.id == user_id).first()
+        user = s.query(BooUser).filter(BooUser.id == user_id).first()
         oc_username = user.oc_username
         s.commit()
         s.close()
@@ -82,7 +82,7 @@ class DB:
     def create_user(self, from_):
         user_id = from_['id']
         lang = 'en'
-        user = User(
+        user = BooUser(
                 id=user_id,
                 name=from_['first_name'] + ' - ' + from_['last_name'],
                 lang=lang,
@@ -96,7 +96,7 @@ class DB:
     @db_transact
     def get_user(self, from_):
         user_id = from_['id']
-        q = self.query(User, User.id == user_id)
+        q = self.query(BooUser, BooUser.id == user_id)
         if q.count() == 0:
             return None
         elif q.count() == 1:
@@ -105,4 +105,4 @@ class DB:
 
     @db_transact
     def all_users(self):
-        return self.query(User).all()
+        return self.query(BooUser).all()

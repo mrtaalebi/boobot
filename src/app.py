@@ -9,7 +9,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler
 from telegram.ext.filters import Filters
 from telegram import InlineKeyboardButton, ReplyKeyboardMarkup
 
-from src.db import DB, User
+from src.db import DB, BooUser
 
 
 class Boobot:
@@ -273,12 +273,12 @@ class Boobot:
             InlineKeyboardButton('main menu')]
         ]
         if re.match('\w{3,}', text):
-            users = self.db.query(User, User.oc_username == text)
+            users = self.db.query(BooUser, BooUser.oc_username == text)
             if users.count() == 1 and users.first().id != user.id:
                 msg = 'a user has already choosen this username!'
             else:
                 s = self.db.session()
-                user = s.query(User).filter(User.id == user.id).first()
+                user = s.query(BooUser).filter(BooUser.id == user.id).first()
                 user.oc_username = text
                 s.commit()
                 msg = 'now choose a strong password:'
@@ -302,7 +302,7 @@ class Boobot:
         ]
         if 8 <= len(text) <= 128:
             s = self.db.session()
-            user = s.query(User).filter(User.id == user.id).first()
+            user = s.query(BooUser).filter(BooUser.id == user.id).first()
             user.oc_password = text
             s.commit()
             
