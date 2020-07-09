@@ -40,22 +40,6 @@ class Boobot:
         )
 
 
-    def def_logger(func):
-        @wraps(func)
-        def wrapper(self, *args, **kwargs):
-            update, context = args[0], args[1]
-            chat = update.message.chat
-            logging.info(
-                (
-                    f'user: {chat.id}, {chat.username}, '
-                    f'{chat.first_name} {chat.last_name} - '
-                    f'call: {func.__name__}'
-                )
-            )
-            return func(self, *args, **kwargs)
-        return wrapper
- 
-
     def build_callback(self, data):
         return_value = json.dumps(data)
         if len(return_value) > 64:
@@ -110,7 +94,6 @@ class Boobot:
         return wrapper
 
     
-    @def_logger
     @check_admin
     def admin_add_user(self, update, context):
         text = update.message.text
@@ -132,7 +115,6 @@ class Boobot:
         context.bot.send_message(user_id, msg, reply_markup=reply_keyboard)
 
 
-    @def_logger
     @check_admin
     def admin_list_users(self, update, context):
         users = self.db.all_users()
@@ -151,7 +133,6 @@ class Boobot:
         self.send_keyboard(update, keyboard, 'all users:')
 
 
-    @def_logger
     @check_admin
     def admin_delete_user(self, update, context):
         text = update.message.text
@@ -180,7 +161,6 @@ class Boobot:
         context.bot.send_message(user_id, msg, reply_markup=reply_keyboard)
 
 
-    @def_logger
     @check_admin
     def admin_sendtoall(self, update, context):
         user_id = update.message.chat.id
@@ -198,7 +178,6 @@ class Boobot:
         self.send_keyboard(update, keyboard, msg)
 
 
-    @def_logger
     @check_admin
     def admin_sendtoall_message(self, update, context):
         user_id = update.message.chat.id
@@ -216,7 +195,6 @@ class Boobot:
             context.bot.send_message(user.id, text, reply_markup=reply_keyboard)
 
 
-    @def_logger
     @check_user
     def start(self, update, context):
         user = self.db.get_user(update.message.chat)
@@ -229,7 +207,6 @@ class Boobot:
         self.send_keyboard(update, keyboard, 'main menu')
 
 
-    @def_logger
     @check_user
     def mtproto(self, update, context):
         keyboard = [
@@ -239,7 +216,6 @@ class Boobot:
         self.send_keyboard(update, keyboard, msg)
 
     
-    @def_logger
     @check_user
     def openconnect(self, update, context):
         keyboard = [
@@ -250,7 +226,6 @@ class Boobot:
         self.send_keyboard(update, keyboard, 'openconnect')
 
 
-    @def_logger
     @check_user
     def openconnect_show_data(self, update, context):
         user = self.db.get_user(update.message.chat)
@@ -275,7 +250,6 @@ class Boobot:
             )
 
 
-    @def_logger
     @check_user
     def openconnect_add_data(self, update, context):
         user = self.db.get_user(update.message.chat)
@@ -290,7 +264,6 @@ class Boobot:
         self.send_keyboard(update, keyboard, msg)
 
 
-    @def_logger
     @check_user
     def openconnect_add_data_username(self, update, context):
         user = self.db.get_user(update.message.chat)
@@ -320,7 +293,6 @@ class Boobot:
         self.send_keyboard(update, keyboard, msg)
 
 
-    @def_logger
     @check_user
     def openconnect_add_data_password(self, update, context):
         user = self.db.get_user(update.message.chat)
@@ -354,7 +326,6 @@ class Boobot:
             self.send_keyboard(update, keyboard, msg)
 
 
-    @def_logger
     @check_user
     def user_input(self, update, context):
         user_id = update.message.chat.id
