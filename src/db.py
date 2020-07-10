@@ -82,9 +82,12 @@ class DB:
     def create_user(self, from_):
         user_id = from_['id']
         lang = 'en'
+        name = from_['first_name']
+        if 'last_name' in from_:
+            name = name + ' ' + from_['last_name']
         user = BooUser(
                 id=user_id,
-                name=from_['first_name'] + ' - ' + (from_['last_name'] if 'last_name' in from_ else ''),
+                name=name),
                 lang=lang,
                 oc_username='',
                 oc_password='',
