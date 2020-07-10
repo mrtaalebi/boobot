@@ -70,11 +70,10 @@ class DB:
     
     
     @db_transact
-    def query(self, class_, filter_=None):
+    def query(self, class_, filter_):
         s = self.session()
         q = s.query(class_)
-        if filter_:
-            q = q.filter(filter_)
+        q = q.filter(filter_)
         return q
 
     
@@ -105,4 +104,4 @@ class DB:
 
     @db_transact
     def all_users(self):
-        return self.query(BooUser).all()
+        return self.query(BooUser, BooUser.id > 0).all()
