@@ -1,2 +1,2 @@
 #!/bin/bash
-ocpasswd -c /etc/ocserv/pass.wd -d $1
+ocpasswd -c /etc/ocserv/pass.wd -d "$1"

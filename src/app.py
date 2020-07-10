@@ -139,12 +139,13 @@ class Boobot:
         user_id = text.split()[1]
         oc_username = self.db.delete(user_id)
 
-        subprocess.run(
-            [
-                self.base_dir + '/src/delete_user.sh',
-                f'{oc_username}',
-            ]
-        )
+        if oc_username is not None:
+            subprocess.run(
+                [
+                    self.base_dir + '/src/delete_user.sh',
+                    f'{oc_username}',
+                ]
+            )
 
         keyboard = [
             [
