@@ -84,7 +84,7 @@ class DB:
         lang = 'en'
         user = BooUser(
                 id=user_id,
-                name=from_['first_name'] + ' - ' + from_['last_name'],
+                name=from_['first_name'] + ' - ' + (from_['last_name'] if 'last_name' in from_ else ''),
                 lang=lang,
                 oc_username='',
                 oc_password='',
