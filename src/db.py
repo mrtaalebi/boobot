@@ -64,6 +64,7 @@ class DB:
         s = self.session()
         user = s.query(BooUser).filter(BooUser.id == user_id).first()
         oc_username = user.oc_username
+        s.delete(user)
         s.commit()
         s.close()
         return oc_username
