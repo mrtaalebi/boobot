@@ -87,7 +87,7 @@ class DB:
             name = name + ' ' + from_['last_name']
         user = BooUser(
                 id=user_id,
-                name=name),
+                name=name,
                 lang=lang,
                 oc_username='',
                 oc_password='',
