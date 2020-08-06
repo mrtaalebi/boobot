@@ -193,7 +193,10 @@ class Boobot:
         ]
         reply_keyboard = ReplyKeyboardMarkup(keyboard)
         for user in users:
-            context.bot.send_message(user.id, text, reply_markup=reply_keyboard)
+            try:
+                context.bot.send_message(user.id, text, reply_markup=reply_keyboard)
+            except:
+                print('bot blocked')
 
 
     @check_user
