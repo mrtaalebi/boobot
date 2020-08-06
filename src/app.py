@@ -184,7 +184,7 @@ class Boobot:
         user_id = update.message.chat.id
         self.input_dispatcher[user_id] = None
         text = update.message.text
-        users = db.all_users()
+        users = self.db.all_users()
         keyboard = [
             [
                 InlineKeyboardButton('openconnect'),
