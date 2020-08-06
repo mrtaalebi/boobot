@@ -182,7 +182,7 @@ class Boobot:
     @check_admin
     def admin_sendtoall_message(self, update, context):
         user_id = update.message.chat.id
-        input_dispatcher[user_id] = None
+        self.input_dispatcher[user_id] = None
         text = update.message.text
         users = db.all_users()
         keyboard = [
