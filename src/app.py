@@ -133,7 +133,7 @@ class Boobot:
 
             ] for user in users_full
         ]
-        self.send_keyboard(update, keyboard, 'all users:')
+        self.send_keyboard(update, keyboard, f'all {len(users)} users:')
 
 
     @check_admin
