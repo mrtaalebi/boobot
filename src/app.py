@@ -119,16 +119,19 @@ class Boobot:
     def admin_list_users(self, update, context):
         users = self.db.all_users()
 
+        users_full = [context.bot.get_chat(user.id) for user in users]
+
         keyboard = [
             [
                 InlineKeyboardButton('main menu'),
             ]
         ] + [
             [
-                InlineKeyboardButton(f'@{context.bot.get_chat(user.id).username}'),
+                InlineKeyboardButton(
+                    f'{user.first_name} {user.last_name} {user.username}'),
                 InlineKeyboardButton(f'DEL {user.id}')
 
-            ] for user in users
+            ] for user in users_full
         ]
         self.send_keyboard(update, keyboard, 'all users:')
 
