@@ -128,7 +128,7 @@ class Boobot:
         ] + [
             [
                 InlineKeyboardButton(
-                    f'{user.first_name} {user.last_name} {user.username}'),
+                    f'{user.first_name} {user.last_name} | @{user.username}'),
                 InlineKeyboardButton(f'DEL {user.id}')
 
             ] for user in users_full
