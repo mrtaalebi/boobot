@@ -125,7 +125,7 @@ class Boobot:
             ]
         ] + [
             [
-                InlineKeyboardButton(f'{user.name}'),
+                InlineKeyboardButton(f'@{context.bot.get_chat(user.id).username}'),
                 InlineKeyboardButton(f'DEL {user.id}')
 
             ] for user in users
